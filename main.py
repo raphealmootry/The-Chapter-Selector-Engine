@@ -14,6 +14,7 @@ chapter_choice = st.sidebar.selectbox(
 )
 
 file_map = {
+    "Chapter 2": "chapter_1.csv",
     "Chapter 2": "chapter_2.csv",
     "Chapter 3": "chapter_3.csv",
     "Chapter 4": "chapter_4.csv",
