@@ -25,7 +25,6 @@ target_file = file_map[chapter_choice]
 # --- 2. DATA LOADING ENGINE ---
 @st.cache_data(show_spinner=False)
 def load_data(filename):
-    # This force-checks the current directory
     base_path = os.path.dirname(__file__)
     full_path = os.path.join(base_path, filename)
     
@@ -39,10 +38,6 @@ def load_data(filename):
     return None
 
 # --- 3. SESSION STATE INITIALIZATION ---
-# Using a 'version' key to allow us to force-reset if files are missing
-if "app_version" not in st.session_state:
-    st.session_state.app_version = 1.0
-
 if f"deck_{chapter_choice}" not in st.session_state:
     data = load_data(target_file)
     if data:
@@ -68,7 +63,6 @@ if f"deck_{chapter_choice}" in st.session_state:
             st.markdown(f"### {curr['Question']}")
             
             if curr.get('Options') and str(curr['Options']).strip() != "":
-                # Fixes the display issue you had with \n
                 clean_options = str(curr['Options']).replace("\\n", "\n")
                 st.info(clean_options)
             
@@ -97,16 +91,22 @@ if f"deck_{chapter_choice}" in st.session_state:
     with tab2:
         st.header("Deck Management")
         st.write(f"Currently viewing: `{target_file}`")
+        if st.button("🗑️ Reshuffle & Force Sync"):
+            st.cache_data.clear()
+            del st.session_state[f"deck_{chapter_choice}"]
+            st.rerun()
         st.dataframe(pd.DataFrame(deck), use_container_width=True)
 
 else:
     st.error(f"⚠️ **File Not Found:** `{target_file}`")
-    st.write("Streamlit hasn't updated its file list yet.")
-    if st.button("🔄 Force Refresh File List"):
+    if st.button("🔄 Try Re-scanning Repository"):
         st.cache_data.clear()
         st.rerun()
 
-# --- 5. DEBUG TOOLS (Optional) ---
-if st.sidebar.checkbox("Show Debug Info"):
-    st.sidebar.write("Files found in repo:")
-    st.sidebar.write(os.listdir("."))
+# --- 5. SIDEBAR EXTRAS (The Vibes) ---
+st.sidebar.divider()
+st.sidebar.markdown("### 🎧 Study Beats")
+st.sidebar.video("https://www.youtube.com/watch?v=5yx6BWlEVcY")
+
+if st.sidebar.checkbox("Show Debug Mode"):
+    st.sidebar.write("Visible Files:", os.listdir("."))
