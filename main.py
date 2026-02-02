@@ -8,13 +8,15 @@ st.set_page_config(page_title="Ohio RE Master Suite", layout="wide")
 # --- 1. CONFIGURATION & NAVIGATION ---
 st.sidebar.title("📚 Course Navigation")
 
+# 1. Update the selectbox to include Chapter 1
 chapter_choice = st.sidebar.selectbox(
     "Select Chapter",
     ["Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"]
 )
 
+# 2. Update the map so the engine knows where to look
 file_map = {
-    "Chapter 2": "chapter_1.csv",
+    "Chapter 1": "chapter_1.csv",  # <--- ADD THIS LINE
     "Chapter 2": "chapter_2.csv",
     "Chapter 3": "chapter_3.csv",
     "Chapter 4": "chapter_4.csv",
